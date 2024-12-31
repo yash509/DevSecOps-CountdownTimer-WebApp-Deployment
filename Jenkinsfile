@@ -12,7 +12,7 @@ pipeline {
     }
     
     environment {
-        IMAGE_NAME = "yash5090/bmical"
+        IMAGE_NAME = "yash5090/cntdwntmr"
         TAG = "${params.DOCKER_TAG}" 
         SCANNER_HOME = tool 'sonar-scanner'
         AWS_ACCOUNT_ID="992382397067"
@@ -143,7 +143,7 @@ pipeline {
         
         stage('Checkout from Git') {                        
             steps {                                       
-                git branch: 'main', url: 'https://github.com/yash509/DevSecOps-Bmicalculator-WebApp-Deployment.git'
+                git branch: 'main', url: 'https://github.com/yash509/DevSecOps-CountdownTimer-WebApp-Deployment.git'
             }
         }
         
@@ -405,15 +405,15 @@ pipeline {
 
         stage ("Remove Docker Container") {
             steps{
-                sh "docker stop bmical | true"
-                sh "docker rm bmical | true"
+                sh "docker stop cntdwntmr | true"
+                sh "docker rm cntdwntmr | true"
              }
         }
         
         stage('Deploy to Docker Container'){
             steps{
                 //dir('BMI Calculator (JS)') {
-                    sh "docker run -d --name bmical -p 5000:80 ${IMAGE_NAME}:${TAG}" 
+                    sh "docker run -d --name cntdwntmr -p 5000:80 ${IMAGE_NAME}:${TAG}" 
                 //}
             }
         }
@@ -474,7 +474,7 @@ pipeline {
                     // Always switch traffic based on DEPLOY_ENV
                     withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'k8s', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
                         sh '''
-                            kubectl patch service bmical-service -p "{\\"spec\\": {\\"selector\\": {\\"app\\": \\"bmical\\", \\"version\\": \\"''' + newEnv + '''\\"}}}"
+                            kubectl patch service cntdwntmr-service -p "{\\"spec\\": {\\"selector\\": {\\"app\\": \\"cntdwntmr\\", \\"version\\": \\"''' + newEnv + '''\\"}}}"
                         '''
                     }
                     echo "Traffic has been switched to the ${newEnv} environment."
